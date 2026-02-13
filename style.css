@@ -1,0 +1,199 @@
+/* =========================
+   Basic Prototype Styling
+   ========================= */
+
+:root{
+  --bg: #0b1220;
+  --panel: #111a2e;
+  --panel-2: #0f172a;
+  --text: #e5e7eb;
+  --muted: #a1a1aa;
+  --border: rgba(255,255,255,0.12);
+  --focus: rgba(255,255,255,0.35);
+  --btn: rgba(255,255,255,0.14);
+  --btn2: rgba(255,255,255,0.08);
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.card{
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  margin: 16px 0;
+}
+
+.card__header h2{
+  margin: 0 0 6px 0;
+  font-size: 1.25rem;
+}
+
+.card__content{
+  margin-top: 10px;
+}
+
+.muted{ color: var(--muted); }
+.help{ margin: 0 0 12px 0; color: var(--muted); }
+
+.form{
+  display: grid;
+  gap: 12px;
+}
+
+.form__row{
+  display: grid;
+  gap: 6px;
+}
+
+.form__grid{
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 720px){
+  .form__grid{ grid-template-columns: 1fr 1fr; }
+}
+
+label{
+  font-weight: 600;
+}
+
+input, select, textarea{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+}
+
+/* Ensure dropdown options have readable black text on white background */
+select option{
+  background: #ffffff;
+  color: #000000;
+}
+
+input:focus, select:focus, textarea:focus, button:focus{
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.actions{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn{
+  border: 1px solid var(--border);
+  background: var(--btn);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn--secondary{
+  background: var(--btn2);
+  font-weight: 600;
+}
+
+.notice{
+  min-height: 22px;
+  padding: 6px 0;
+  color: var(--muted);
+}
+
+.divider{
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 16px 0;
+}
+
+.listActions{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 8px 0 10px 0;
+}
+
+.list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.listItem{
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(255,255,255,0.05);
+}
+
+.listItem h4{
+  margin: 0 0 6px 0;
+  font-size: 1.05rem;
+}
+
+.meta{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.tag{
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.06);
+}
+
+.tableWrap{
+  margin-top: 14px;
+  overflow: auto;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+.table{
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+  background: rgba(255,255,255,0.03);
+}
+
+.table th, .table td{
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.table th{
+  background: rgba(255,255,255,0.06);
+}
+
+.srOnly{
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

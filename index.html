@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FactoryFlow Solutions - Fault Management</title>
+  <link rel="stylesheet" href="static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- ===================== -->
+<!-- SECTION 1: Fault Logging (Create + Read basic list) -->
+<!-- ===================== -->
+
+<section class="card" id="faultLogging" aria-labelledby="faultLoggingTitle">
+  <header class="card__header">
+    <h2 id="faultLoggingTitle">1. Log a manufacturing fault</h2>
+    <p class="muted">
+      Use this form to add a new fault report to the database. This is a prototype. No validation is applied yet.
+    </p>
+  </header>
+
+  <div class="card__content">
+    <form id="faultForm" class="form" aria-describedby="faultFormHelp">
+      <p id="faultFormHelp" class="help">
+        Required fields depend on your database setup. Complete the fields you have in Supabase.
+      </p>
+
+      <div class="form__row">
+        <label for="faultTitle">Fault title</label>
+        <input id="faultTitle" name="faultTitle" type="text" placeholder="e.g. Conveyor belt jam on Line 2" autocomplete="off">
+      </div>
+
+      <div class="form__row">
+        <label for="faultDescription">Fault description</label>
+        <textarea id="faultDescription" name="faultDescription" rows="4" placeholder="Describe what happened, where, and when."></textarea>
+      </div>
+
+      <div class="form__grid">
+        <div class="form__row">
+          <label for="faultSeverity">Severity</label>
+          <select id="faultSeverity" name="faultSeverity">
+            <option value="">Select severity</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Critical">Critical</option>
+          </select>
+        </div>
+
+        <div class="form__row">
+          <label for="faultStatus">Status</label>
+          <select id="faultStatus" name="faultStatus">
+            <option value="">Select status</option>
+            <option value="Logged">Logged</option>
+            <option value="Investigating">Investigating</option>
+            <option value="In progress">In progress</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form__row">
+        <label for="faultPhotoUrl">Photo URL (optional)</label>
+        <input id="faultPhotoUrl" name="faultPhotoUrl" type="url" placeholder="https://example.com/photo.jpg" autocomplete="off">
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn">Submit fault</button>
+        <button type="button" id="refreshFaultsBtn" class="btn btn--secondary">Refresh list</button>
+      </div>
+
+      <div class="notice" role="status" aria-live="polite" id="faultFormMessage"></div>
+    </form>
+
+    <hr class="divider" aria-hidden="true">
+
+    <section aria-labelledby="faultListTitle">
+      <h3 id="faultListTitle">Recent faults (database)</h3>
+
+      <div class="listActions">
+        <button type="button" id="prevPageBtn" class="btn btn--secondary" aria-label="Previous page">Previous</button>
+        <p class="muted" id="pageInfo" aria-live="polite">Page 1</p>
+        <button type="button" id="nextPageBtn" class="btn btn--secondary" aria-label="Next page">Next</button>
+      </div>
+
+      <ul id="faultList" class="list" aria-live="polite">
+        <li class="muted">Loading faults from Supabase…</li>
+      </ul>
+    </section>
+  </div>
+</section>
+
+<!-- ===================== -->
+<!-- SECTION 2: Fault Report Viewer (Read + Filter using WHERE) -->
+<!-- ===================== -->
+<section class="card" id="faultReport" aria-labelledby="faultReportTitle">
+  <header class="card__header">
+    <h2 id="faultReportTitle">2. Fault report viewer</h2>
+    <p class="muted">
+      This section reads fault data from the database and filters results (like SELECT … WHERE).
+    </p>
+  </header>
+
+  <div class="card__content">
+    <form id="reportForm" class="form" aria-describedby="reportHelp">
+      <p id="reportHelp" class="help">
+        Choose a filter, then load a report. This is a prototype report view.
+      </p>
+
+      <div class="form__grid">
+        <div class="form__row">
+          <label for="filterStatus">Filter by status</label>
+          <select id="filterStatus" name="filterStatus" aria-describedby="filterStatusHelp">
+            <option value="">All statuses</option>
+            <option value="Logged">Logged</option>
+            <option value="Investigating">Investigating</option>
+            <option value="In progress">In progress</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+          <span id="filterStatusHelp" class="help">Leave as 'All statuses' to view all records</span>
+        </div>
+
+        <div class="form__row">
+          <label for="filterSeverity">Filter by severity</label>
+          <select id="filterSeverity" name="filterSeverity" aria-describedby="filterSeverityHelp">
+            <option value="">All severities</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Critical">Critical</option>
+          </select>
+          <span id="filterSeverityHelp" class="help">Leave as 'All severities' to view all records</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn">Load report</button>
+        <button type="button" id="clearFiltersBtn" class="btn btn--secondary">Clear filters</button>
+      </div>
+
+      <div class="notice" role="status" aria-live="polite" id="reportMessage"></div>
+    </form>
+
+    <div class="tableWrap" role="region" aria-label="Fault report results" tabindex="0">
+      <table class="table" aria-describedby="reportTableHelp">
+        <caption id="reportTableHelp" class="srOnly">
+          A table showing fault records loaded from Supabase.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Severity</th>
+            <th scope="col">Status</th>
+            <th scope="col">Created</th>
+          </tr>
+        </thead>
+        <tbody id="reportTableBody">
+          <tr>
+            <td colspan="5" class="muted">No data loaded yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<!-- ===================== -->
+<!-- SECTION 3 -->
+<!-- ===================== -->
+ <section class="card"><p>TBC</p></section>
+ <!-- ===================== -->
+<!-- SECTION 4 -->
+<!-- ===================== -->
+ <section class="card" ><p>TBC</p></section>
+ <!-- ===================== -->
+<!-- SECTION 5 -->
+<!-- ===================== -->
+ <section class="card" ><p>TBC</p></section>
+ <!-- ===================== -->
+<!-- SECTION 6 -->
+<!-- ===================== -->
+ <section class="card" ><p>TBC</p></section>
+<script defer src="static/app.js"></script>
+</body>
+</html>
